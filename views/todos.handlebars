@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="jquery.sortable.js"></script>
+    <title>Todo lists App</title>
+    <style>
+        /*these all styles for changing the scroll_bar style on todos page*/
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: grey; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+
+        /*these all styles for drag and drop todos to rearrange them*/
+        .handles span{
+			cursor: move;
+            opacity: 0.4;
+		}
+        .handles span:hover{
+            opacity: 1;
+        }
+        .handles li{
+            list-style: none;
+        }
+        li.sortable-placeholder {
+			border: 4px dashed darkgray;
+            height: 12em;
+            width: 30em;
+            background: #f4f4f4;
+		}
+    </style>
+</head>
+<body>
+
+    {{!-- Navebar --}}
+    <nav class="text-center navbar navbar-dark bg-light fixed-top">
+        <a href="/"><span style="font-size:1.5em" class="text-dark navbar-text">TODO<span class="text-info">App</span></span></a> 
+        {{#if user}}
+            <span style="font-size:1.5em" class="navbar-text text-dark">Welcome <span class="text-info">{{user}}</span> </span>
+            <a class="btn btn-outline-info" href="/logout">LOGOUT</a>
+        {{/if}}
+    </nav>
+    <br><br><br><br>
+
+    {{!-- form and todos under container class --}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <form class="needs-validation" action="/todos" method="POST" novalidate>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">TODO Name</label>
+                        <input type="text" class="form-control" id="validationCustom01" aria-describedby="emailHelp" placeholder="TODO Name" name="todo_name" required>
+                        <div class="invalid-feedback">Please provide the TODO name</div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">TODO Body</label>
+                        <textarea placeholder="TODO Body" class="form-control" name="todo_body" id="exampleInputPassword1" cols="30" rows="4" required></textarea>
+                        <div class="invalid-feedback">Please prove the TODO body</div>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-block btn-info">Add Todo</button>
+                </form>
+                <br><br>
+            </div>
+            <div class="col-md-6">
+                <ul class="handles list">
+                {{#each row}}
+                {{log row}}
+                    <li>
+                        {{#if this.todoperson}}
+                        <h2><span >:: </span><i>{{this.todoperson}}</i> says:
+                    <div style="display:inline-block" class="dropdown">
+                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"></button>
+                            <div class="dropdown-menu">
+                            <a aria-disabled="true" class="{{this.etable}} btn text-info dropdown-item" href="todos/edit/{{this._id}}">Edit task</a>
+                            {{#if this.Delete_task}}
+                            <a data-id={{this._id}} class="text-danger dropdown-item delete-todo" href="#">{{this.Delete_task}}</a>
+                            {{/if}}
+                            {{#if this.Editable}}
+                            <a data-di={{this._id}} class="edit-todo dropdown-item btn" href="#">Edit by others :- {{this.Editable}}d<a>
+                            {{/if}}
+                            {{#if this.View}}
+                            <a data-idi={{this._id}} class="view-todo text-info dropdown-item btn" href="#">View by others :- {{this.View}}d</a>
+                            {{/if}}
+                            </div>
+                     </div></h2>
+                        {{/if}}
+                    <h4>{{this.todo_name}}</h4>
+                    <p>{{this.todo_body}}</p><hr></li>
+                {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+//JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+    window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();    
+ 
+//This function is for drag and drop to rearrange todos
+$(function(){
+    $('.handles').sortable({
+        handle: 'span'
+    });
+});
+
+//These all for AJAX requests to delete , Edit, and to view todos
+        //1) For deleting a todo
+        $(document).ready(() => {
+            $('.delete-todo').on('click', (e) => {
+                $target = $(e.target);
+                const id = $target.attr('data-id');
+                $.ajax({
+                    type: 'DELETE',
+                    url: 'todo/delete/' + id,
+                    success: (response) => {
+                        alert('Deleting Todo'),
+                        window.location.href = '/todos';
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
+            });
+
+            //2)for editing a todo
+            $('.edit-todo').on('click', (e) => {
+               $target = $(e.target);
+                const di = $target.attr('data-di');
+                $.ajax({
+                    type: 'POST',
+                    url: 'editable/' + di,
+                    success : (response) => {
+                        alert('Now this todo cannot be edited by other persons'),
+                        window.location.href = '/todos';
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
+            });
+
+            //3)For Viewing a todo
+            $('.view-todo').on('click', (e) =>{
+                $target = $(e.target);
+                const idi = $target.attr('data-idi');
+                $.ajax({
+                    type: 'POST',
+                    url: 'viewer/' + idi,
+                    success: (response) => {
+                        alert("Now other users won't be able to view this todo"),
+                        window.location.href = '/todos';
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+
+</script>
+</html>

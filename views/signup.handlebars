@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>TODO List App</title>
+</head>
+<body>
+  {{!-- Navbar --}}
+    <nav class="text-center navbar navbar-dark bg-light">
+        <a href="/"><span style="font-size:1.5em" class="text-dark navbar-text">TODO<span class="text-info">App</span></span></a>
+    </nav>
+    <br><br><br>
+
+    {{!-- Form for signing up --}}
+    <div class="container">
+      <div class="row">
+        <div class="bg-light col-md-5">
+    {{#if error_msg}}
+        <div class="alert alert-danger" role="alert">{{error_msg}}</div>
+    {{/if}}
+    <form class="needs-validation" action="/signup" method="POST" novalidate>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Your name</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Your name" name="username" required>
+            <div class="invalid-feedback">Please provide a username</div>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" required>
+            <div class="invalid-feedback">Please provide an email</div>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password" required>
+            <div class="invalid-feedback">Please enter a password</div>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Confirm Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password" name="password1" required>
+            <div class="invalid-feedback">Please enter a password</div>
+        </div>
+        <br>
+         <button type="submit" class="btn btn-info">Submit</button>
+    </form>
+    <h5 class="float-right">Already have an Account ? <a class="btn btn-info" href="/login"> Log In</a></h5>
+    </div>
+    <div class="text-center col-md-7">
+      <br>
+      <h1>On every device your team touches</h1>
+      <br>
+      <p>With real-time sync across 10+ platforms, everyone will have the most up-to-date information. Always.</p>
+      <br><br>
+      <img src="https://d3ptyyxy2at9ui.cloudfront.net/td_devices-55702c.svg" alt="LOGO">
+    </div>
+    <div>
+    <div>
+</body>
+
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+</html>

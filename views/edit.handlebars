@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.0.js" integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
+    crossorigin="anonymous"></script>
+    <title>Todo lists App</title>
+</head>
+<body>
+    {{!-- Navbar --}}
+      <nav class="text-center navbar navbar-dark bg-light fixed-top">
+        <a href="/"><span style="font-size:1.5em" class="text-dark navbar-text">TODO<span class="text-info">App</span></span></a> 
+        {{#if user}} 
+            <span style="font-size:1.5em" class="navbar-text text-dark">Welcome <span class="text-info">{{user}}</span> </span>
+            <a class="btn btn-outline-info" href="/logout">LOGOUT</a>    
+        {{/if}}
+    </nav>
+    <br><br><br><br>
+
+    {{!-- Form for editing a todo --}}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <form action="/todos/edit/{{row._id}}" method="POST">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">TODO Name</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="TODO Name" name="todo_name" value="{{row.todo_name}}" required>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">TODO Body</label>
+                        <textarea placeholder="TODO Body" class="form-control" name="todo_body" id="exampleInputPassword1" cols="30" rows="4">{{row.todo_body}}</textarea>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-info">Submit</button>
+                    <a class="float-right btn btn-info" href="/todos">Cancel</a>
+                </form>
+            </div>
+        </div>
+</div>
+</body>
+</html>
